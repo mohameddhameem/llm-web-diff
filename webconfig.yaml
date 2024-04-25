@@ -1,0 +1,20 @@
+# webconfig.yaml
+
+websites:
+  # - url: https://the-internet.herokuapp.com
+  #   subpages:
+  #     - /abtest
+  #     - /add_remove_elements
+  #     - /challenging_dom
+
+  # - url: https://the-internet.herokuapp.com
+  #   subpages:
+  #     - /dynamic_content
+  #     - /dynamic_controls
+  #     - /inputs
+  #     - /disappearing_elements
+
+  - url: http://127.0.0.1:8000
+    subpages:
+      - /form
+      - /updated_form  
