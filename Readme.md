@@ -17,3 +17,6 @@ Follow these steps to install the required packages:
 ```bash
 pip install -r requirements.txt
 ```
+
+Other Learning material
+https://github.com/microsoft/autogen/blob/main/test/agentchat/contrib/capabilities/test_teachable_agent.py

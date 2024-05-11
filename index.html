@@ -1,0 +1,60 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Conversational Agent</title>
+</head>
+<body>
+    <h1>Conversational Agent</h1>
+    <div id="chat"></div>
+    <script>
+        const chatDiv = document.getElementById('chat');
+        const eventSource = new EventSource('/stream');
+        eventSource.onmessage = function(event) {
+            const response = event.data;
+            const p = document.createElement('p');
+            p.textContent = response;
+            chatDiv.appendChild(p);
+        };
+    </script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SSE Example</title>
+    <script>
+        const eventSource = new EventSource('/stream');
+        eventSource.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            const message = data.message;
+            // Handle incoming events
+            const messageContainer = document.getElementById('messages');
+            const newMessage = document.createElement('div');
+            newMessage.textContent = message;
+            messageContainer.appendChild(newMessage);
+        };
+
+        function sendMessage() {
+            const userInput = document.getElementById('userInput').value;
+            fetch('/send-message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ userInput: userInput })
+            })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</head>
+<body>
+    <h1>SSE Example</h1>
+    <div id="messages"></div>
+    <input type="text" id="userInput" placeholder="Enter your message">
+    <button onclick="sendMessage()">Send</button>
+</body>
+</html>
+
