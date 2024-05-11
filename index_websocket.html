@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Example</title>
+    <script>
+        var socket = new WebSocket("ws://localhost:8000/ws/user1");
+
+        socket.onopen = function(event) {
+            console.log("WebSocket connection established.");
+        };
+
+        socket.onmessage = function(event) {
+            var message = event.data;
+            // Handle incoming message
+            var messageContainer = document.getElementById('messages');
+            var newMessage = document.createElement('div');
+            newMessage.textContent = message;
+            messageContainer.appendChild(newMessage);
+        };
+
+        function sendMessage() {
+            var userInput = document.getElementById('userInput').value;
+            socket.send(userInput);
+            document.getElementById('userInput').value = ''; // Clear input field
+        }
+    </script>
+</head>
+<body>
+    <h1>WebSocket Example</h1>
+    <div id="messages"></div>
+    <input type="text" id="userInput" placeholder="Enter your message">
+    <button onclick="sendMessage()">Send</button>
+</body>
+</html>
