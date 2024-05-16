@@ -20,3 +20,5 @@ pip install -r requirements.txt
 
 Other Learning material
 https://github.com/microsoft/autogen/blob/main/test/agentchat/contrib/capabilities/test_teachable_agent.py
+
+https://github.com/microsoft/autogen/blob/main/samples/apps/websockets/application.py
