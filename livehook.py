@@ -13,6 +13,10 @@ logger = logging.getLogger(__name__)
 visited_urls = set()
 depth_limit = 5
 
+# Hardcoded credentials for login pages
+USERNAME = 'your_username'
+PASSWORD = 'your_password'
+
 # Function to capture input controls
 def capture_input_controls(driver):
     logger.info('Capturing input controls from the page.')
@@ -67,6 +71,42 @@ def capture_input_controls(driver):
     logger.info('Finished capturing input controls.')
     return input_controls
 
+# Function to check if the page is a login page and perform login if true
+def handle_login_page(driver):
+    logger.info('Checking if the page is a login page.')
+    try:
+        username_field = None
+        password_field = None
+        login_button = None
+
+        inputs = driver.find_elements(By.TAG_NAME, 'input')
+        for input_field in inputs:
+            if input_field.get_attribute('type') == 'text' and ('user' in input_field.get_attribute('name').lower() or 'user' in input_field.get_attribute('id').lower()):
+                username_field = input_field
+            elif input_field.get_attribute('type') == 'password':
+                password_field = input_field
+
+        buttons = driver.find_elements(By.TAG_NAME, 'button')
+        for button in buttons:
+            if 'login' in button.text.lower() or 'submit' in button.text.lower():
+                login_button = button
+                break
+
+        if username_field and password_field and login_button:
+            logger.info('Login page detected. Attempting to log in.')
+            username_field.send_keys(USERNAME)
+            password_field.send_keys(PASSWORD)
+            login_button.click()
+            time.sleep(2)  # wait for the login action to complete
+            return True
+        else:
+            logger.info('This page does not seem to be a login page.')
+            return False
+
+    except Exception as e:
+        logger.error(f"Error while handling login page: {e}")
+        return False
+
 # Recursive function to navigate and capture controls
 def navigate_and_capture(driver, url, depth):
     if depth > depth_limit:
@@ -79,6 +119,11 @@ def navigate_and_capture(driver, url, depth):
     logger.info(f'Navigating to URL: {url}, Depth: {depth}')
     driver.get(url)
     time.sleep(2)  # wait for the page to load
+
+    # Handle login if it's a login page
+    if handle_login_page(driver):
+        # If login is successful, update the current URL after login
+        url = driver.current_url
 
     # Capture input controls
     input_controls = capture_input_controls(driver)
@@ -121,7 +166,7 @@ def navigate_and_capture(driver, url, depth):
 # Main function to execute the script
 def main(url):
     logger.info(f'Starting WebDriver for URL: {url}')
-    
+
     chrome_options = Options()
     chrome_options.add_argument('--headless')  # Run in headless mode
     driver = webdriver.Chrome(executable_path='/path/to/chromedriver', options=chrome_options)
